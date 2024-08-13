@@ -17,4 +17,4 @@ no_sequences = 30
 # Videos are going to be 30 frames in length
 sequence_length = 30
 # Folder start
-start_folder = 30
+start_folder = 1
