@@ -11,7 +11,7 @@ mp_drawing = mp.solutions.drawing_utils # Drawing utilities
 # Path for exported data, numpy arrays
 DATA_PATH = os.path.join('MP_Data') 
 # Actions that we try to detect
-actions = np.array(['hello', 'thanks', 'iloveyou'])
+actions = np.array(['hello', 'thankyou', 'sorry'])
 # Thirty videos worth of data
 no_sequences = 30
 # Videos are going to be 30 frames in length
