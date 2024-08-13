@@ -1,17 +1,4 @@
-'''
-HOW TO RUN:
-    0. CheckMediaPipe.py
-    0. CreateFolders.py
-    
-    After changes ->
-    1. Config.py
-    2. Function.py
-    3. BuildDataset.py
-    4. PreprocessingTrainModel.py
-    5. Main.py
 
-
-'''
 #IMPORT DEPENDENCIES
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
@@ -23,7 +10,8 @@ from tensorflow.keras.layers import LSTM, Dense # type: ignore
 
 
 from Config import actions,mp_holistic
-from Function import mediapipe_detection,draw_styled_landmarks,extract_keypoints,prob_viz
+from Function import HandFaceDetector
+obj = HandFaceDetector()
 
 model = Sequential()
 model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662)))
@@ -59,14 +47,14 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
         ret, frame = cap.read()
 
         # Make detections
-        image, results = mediapipe_detection(frame, holistic)
+        image, results = obj.mediapipe_detection(frame, holistic)
         print(results)
         
         # Draw landmarks
-        draw_styled_landmarks(image, results)
+        obj.draw_styled_landmarks(image, results)
         
         # 2. Prediction logic
-        keypoints = extract_keypoints(results)
+        keypoints = obj.extract_keypoints(results)
         sequence.append(keypoints)
         sequence = sequence[-30:]
         
@@ -90,7 +78,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 sentence = sentence[-5:]
 
             # Viz probabilities
-            image = prob_viz(res, actions, image, colors)
+            image = obj.prob_viz(res, actions, image, colors)
             
         cv2.rectangle(image, (0,0), (640, 40), (245, 117, 16), -1)
         cv2.putText(image, ' '.join(sentence), (3,30), 
