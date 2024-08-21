@@ -1,4 +1,3 @@
-
 #IMPORT DEPENDENCIES
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
@@ -7,22 +6,17 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import Sequential # type: ignore
 from tensorflow.keras.layers import LSTM, Dense # type: ignore
-
+from tensorflow.keras.optimizers import Adam # type: ignore
 
 from Config import actions,mp_holistic
 from Function import HandFaceDetector
 obj = HandFaceDetector()
 
 model = Sequential()
-model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662)))
-model.add(LSTM(128, return_sequences=True, activation='relu'))
-model.add(LSTM(64, return_sequences=False, activation='relu'))
-model.add(Dense(64, activation='relu'))
+model.add(LSTM(64, return_sequences=False, activation='relu', input_shape=(30, 1662)))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(actions.shape[0], activation='softmax'))
-
-model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
-
+model.compile(optimizer=Adam(learning_rate=1e-5), loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 model.load_weights('action.h5')
 
 
